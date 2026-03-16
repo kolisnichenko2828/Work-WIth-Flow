@@ -1,24 +1,44 @@
 package com.kolisnichenko2828.workwithflow.main
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class NumberProducer(scope: CoroutineScope) {
-    private val _number: Flow<Int> = flow {
-        while (true) {
-            delay(1000)
-            emit(Random.nextInt(0, 100))
+class NumberProducer(val scope: CoroutineScope) {
+
+    private var job: Job? = null
+    private val _number = MutableSharedFlow<Int>()
+    val number: SharedFlow<Int> = _number.asSharedFlow()
+
+    init {
+        scope.launch {
+            _number.subscriptionCount
+                .map { it > 0 }
+                .distinctUntilChanged()
+                .collect { isActive -> if (isActive) start() else stop() }
         }
     }
-    val number: SharedFlow<Int> = _number
-        .shareIn(
-            scope = scope,
-            started = SharingStarted.WhileSubscribed()
-        )
+
+    private fun start() {
+        if (job != null) return
+
+        job = scope.launch {
+            while (true) {
+                delay(1000)
+                _number.emit(Random.nextInt(0, 100))
+            }
+        }
+    }
+
+    private fun stop() {
+        job?.cancel()
+        job = null
+    }
 }
