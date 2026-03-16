@@ -29,7 +29,10 @@ fun MainScreen(
             Text(text = stringResource(R.string.list_size, numbers.size))
         }
 
-        items(numbers) { number ->
+        items(
+            items = numbers,
+            key = { it }
+        ) { number ->
             Text(text = stringResource(R.string.number, number))
         }
     }
