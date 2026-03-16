@@ -30,8 +30,7 @@ fun MainScreen(
         }
 
         items(
-            items = numbers,
-            key = { it }
+            items = numbers
         ) { number ->
             Text(text = stringResource(R.string.number, number))
         }
