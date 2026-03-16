@@ -8,9 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kolisnichenko2828.workwithflow.R
 
 @Composable
 fun MainScreen(
@@ -24,11 +26,11 @@ fun MainScreen(
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         item {
-            Text(text = "List size: ${numbers.size}")
+            Text(text = stringResource(R.string.list_size, numbers.size))
         }
 
         items(numbers) { number ->
-            Text(text = "Number: $number")
+            Text(text = stringResource(R.string.number, number))
         }
     }
 }

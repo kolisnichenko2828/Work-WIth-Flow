@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Work With Flow</string>
+    <string name="list_size">List size: %d</string>
+    <string name="number">Number: %d</string>
 </resources>
