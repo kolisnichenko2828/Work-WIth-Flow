@@ -10,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.kolisnichenko2828.workwithflow.R
@@ -20,6 +21,14 @@ fun MainScreen(
     viewModel: MainViewModel = viewModel()
 ) {
     val numbers by viewModel.numbers.collectAsStateWithLifecycle()
+
+    LifecycleStartEffect(Unit) {
+        viewModel.startNumberGenerating()
+
+        onStopOrDispose {
+            viewModel.stopNumberGenerating()
+        }
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),

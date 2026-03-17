@@ -21,4 +21,12 @@ class MainViewModel : ViewModel() {
             started = SharingStarted.WhileSubscribed(),
             initialValue = _numbers.value
         )
+
+    fun startNumberGenerating() {
+        producer.start()
+    }
+
+    fun stopNumberGenerating() {
+        producer.stop()
+    }
 }

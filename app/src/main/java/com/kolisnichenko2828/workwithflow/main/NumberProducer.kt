@@ -6,8 +6,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -17,16 +15,7 @@ class NumberProducer(val scope: CoroutineScope) {
     private val _number = MutableSharedFlow<Int>()
     val number: SharedFlow<Int> = _number.asSharedFlow()
 
-    init {
-        scope.launch {
-            _number.subscriptionCount
-                .map { it > 0 }
-                .distinctUntilChanged()
-                .collect { isActive -> if (isActive) start() else stop() }
-        }
-    }
-
-    private fun start() {
+    fun start() {
         if (job != null) return
 
         job = scope.launch {
@@ -37,7 +26,7 @@ class NumberProducer(val scope: CoroutineScope) {
         }
     }
 
-    private fun stop() {
+    fun stop() {
         job?.cancel()
         job = null
     }
